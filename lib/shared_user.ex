@@ -31,7 +31,6 @@ defmodule Bonfire.Data.SharedUser.Migration do
 
   use Ecto.Migration
   import Pointers.Migration
-  alias Bonfire.Data.SharedUser
 
   # create_shared_user_table/{0,1}
 
@@ -43,6 +42,8 @@ defmodule Bonfire.Data.SharedUser.Migration do
         add :label, :string, default: "Organisation"
         unquote_splicing(exprs)
       end
+
+      flush()
 
       create table("bonfire_data_shared_user_accounts", primary_key: false) do
         add :shared_user_id, strong_pointer(Bonfire.Data.SharedUser)
@@ -58,7 +59,10 @@ defmodule Bonfire.Data.SharedUser.Migration do
 
   # drop_shared_user_table/0
 
-  def drop_shared_user_table(), do: drop_mixin_table(User)
+  def drop_shared_user_table() do
+    drop_mixin_table(Bonfire.Data.SharedUser)
+    drop_if_exists table("bonfire_data_shared_user_accounts")
+  end
 
   # migrate_shared_user/{0,1}
 
