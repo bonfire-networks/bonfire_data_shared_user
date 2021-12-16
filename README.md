@@ -1,4 +1,4 @@
-# bonfire_data_shared_user
+# Bonfire.Data.SharedUser
 
 
 
