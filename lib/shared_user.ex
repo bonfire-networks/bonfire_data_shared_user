@@ -23,7 +23,7 @@ defmodule Bonfire.Data.SharedUser do
   end
 
   def changeset(user \\ %SharedUser{}, params) do
-    Changeset.cast(user, params, [])
+    Changeset.cast(user, params, [:label])
   end
 
 end
