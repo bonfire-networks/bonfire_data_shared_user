@@ -47,7 +47,7 @@ defmodule Bonfire.Data.SharedUser.Migration do
 
       create table("bonfire_data_shared_user_accounts", primary_key: false) do
         add :shared_user_id, strong_pointer(Bonfire.Data.SharedUser)
-        add :account_id, strong_pointer(Bonfire.Data.Identity.Account)
+        add :account_id, strong_pointer()
         # timestamps()
       end
 
