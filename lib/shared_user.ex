@@ -27,6 +27,7 @@ defmodule Bonfire.Data.SharedUser do
 end
 
 defmodule Bonfire.Data.SharedUser.Migration do
+  @moduledoc false
   use Ecto.Migration
   import Pointers.Migration
 
