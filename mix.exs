@@ -38,7 +38,7 @@ defmodule Bonfire.Data.SharedUser.MixProject do
         extras: ["README.md"]
       ],
       deps: Mess.deps [
-        {:pointers, "~> 0.5.1"},
+        {:needle, "~> 0.7"},
         {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
         {:bonfire_data_identity,
          git: "https://github.com/bonfire-networks/bonfire_data_identity",

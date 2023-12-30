@@ -3,7 +3,7 @@ defmodule Bonfire.Data.SharedUser do
   A mixin for shared user personas (which multiple accounts can use)
   """
 
-  use Pointers.Mixin,
+  use Needle.Mixin,
     otp_app: :bonfire_data_shared_user,
     source: "bonfire_data_shared_user"
 
@@ -29,15 +29,15 @@ end
 defmodule Bonfire.Data.SharedUser.Migration do
   @moduledoc false
   use Ecto.Migration
-  import Pointers.Migration
+  import Needle.Migration
 
   # create_shared_user_table/{0,1}
 
   defp make_shared_user_table(exprs) do
     quote do
-      require Pointers.Migration
+      require Needle.Migration
 
-      Pointers.Migration.create_mixin_table "bonfire_data_shared_user" do
+      Needle.Migration.create_mixin_table "bonfire_data_shared_user" do
         add(:label, :string, default: "Organisation")
         unquote_splicing(exprs)
       end
