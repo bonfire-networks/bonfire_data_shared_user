@@ -41,8 +41,8 @@ defmodule Bonfire.Data.SharedUser.MixProject do
         {:needle, "~> 0.7"},
         {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
         {:bonfire_data_identity,
-         git: "https://github.com/bonfire-networks/bonfire_data_identity",
-         branch: "main"}
+         git: "https://github.com/bonfire-networks/bonfire_data_identity"
+         }
       ]
     ]
   end
