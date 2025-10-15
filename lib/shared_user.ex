@@ -35,7 +35,7 @@ defmodule Bonfire.Data.SharedUser.Migration do
 
   defp make_shared_user_table(exprs) do
     quote do
-      require Needle.Migration
+      import Needle.Migration
 
       Needle.Migration.create_mixin_table "bonfire_data_shared_user" do
         add(:label, :string, default: "Organisation")
@@ -45,8 +45,8 @@ defmodule Bonfire.Data.SharedUser.Migration do
       flush()
 
       create table("bonfire_data_shared_user_accounts", primary_key: false) do
-        add(:shared_user_id, strong_pointer(Bonfire.Data.SharedUser))
-        add(:account_id, strong_pointer())
+        add_pointer(:shared_user_id, :strong, Bonfire.Data.SharedUser)
+        add_pointer(:account_id, :strong)
         # timestamps()
       end
     end
