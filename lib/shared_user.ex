@@ -30,6 +30,9 @@ defmodule Bonfire.Data.SharedUser.Migration do
   @moduledoc false
   use Ecto.Migration
   import Needle.Migration
+  use Needle.Migration.Indexable
+
+  @join_table "bonfire_data_shared_user_accounts"
 
   # create_shared_user_table/{0,1}
 
@@ -44,11 +47,13 @@ defmodule Bonfire.Data.SharedUser.Migration do
 
       flush()
 
-      create table("bonfire_data_shared_user_accounts", primary_key: false) do
+      create table(@join_table, primary_key: false) do
         add_pointer(:shared_user_id, :strong, Bonfire.Data.SharedUser)
         add_pointer(:account_id, :strong)
         # timestamps()
       end
+
+      Bonfire.Data.SharedUser.Migration.add_shared_user_indexes()
     end
   end
 
@@ -81,4 +86,9 @@ defmodule Bonfire.Data.SharedUser.Migration do
   end
 
   defmacro migrate_shared_user(dir), do: mu(dir)
+
+  def add_shared_user_indexes do
+    create_index_for_pointer(@join_table, :shared_user_id)
+    create_index_for_pointer(@join_table, :account_id)
+  end
 end
