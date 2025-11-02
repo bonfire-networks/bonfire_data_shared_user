@@ -47,7 +47,7 @@ defmodule Bonfire.Data.SharedUser.Migration do
 
       flush()
 
-      create table(@join_table, primary_key: false) do
+      create table(unquote(@join_table), primary_key: false) do
         add_pointer(:shared_user_id, :strong, Bonfire.Data.SharedUser)
         add_pointer(:account_id, :strong)
         # timestamps()
