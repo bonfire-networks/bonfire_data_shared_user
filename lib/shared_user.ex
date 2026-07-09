@@ -18,7 +18,14 @@ defmodule Bonfire.Data.SharedUser do
 
     belongs_to(:user, User, foreign_key: :id, define_field: false)
 
+    # access is account-level: any user of a linked account may act as the shared user
     many_to_many(:caretaker_accounts, Account, join_through: "bonfire_data_shared_user_accounts")
+
+    # the specific users behind each link (invited co-managers + creator) — the roster's display identities, never the account's other personas. Also stitched onto User in config/bonfire_data.exs.
+    many_to_many(:caretaker_users, User,
+      join_through: "bonfire_data_shared_user_accounts",
+      join_keys: [shared_user_id: :id, user_id: :id]
+    )
   end
 
   def changeset(user \\ %SharedUser{}, params) do
@@ -50,6 +57,9 @@ defmodule Bonfire.Data.SharedUser.Migration do
       create table(unquote(@join_table), primary_key: false) do
         add_pointer(:shared_user_id, :strong, Bonfire.Data.SharedUser)
         add_pointer(:account_id, :strong)
+
+        # the specific invited user: its own display identity, so the roster never leaks the account's other personas
+        add_pointer(:user_id, :weak)
         # timestamps()
       end
 
@@ -88,7 +98,8 @@ defmodule Bonfire.Data.SharedUser.Migration do
   defmacro migrate_shared_user(dir), do: mu(dir)
 
   def add_shared_user_indexes do
-    create_index_for_pointer(@join_table, :shared_user_id)
+    # an account can be linked to a given shared user only once (also serves shared_user_id lookups as the leftmost prefix)
+    create_if_not_exists(unique_index(@join_table, [:shared_user_id, :account_id]))
     create_index_for_pointer(@join_table, :account_id)
   end
 end
