@@ -5,14 +5,12 @@ defmodule Bonfire.Data.SharedUser.Repo.Migrations.SharedUserAccountsAddUserId do
 
   @join_table "bonfire_data_shared_user_accounts"
 
-  # Record the specific user behind each co-manager link (the invited user, or the creator for the
-  # bootstrap link) so the roster shows only that person and never the account's other personas.
+  # Record the specific user behind each co-manager link (the invited user, or the creator for the bootstrap link) so the roster shows only that person and never the account's other personas.
   # Access stays account-level via `account_id`; this is the display/identity face of each link.
   # Nullable (weak) so legacy rows created before this column keep working.
+  # `alter_add_pointer_if_not_exists` is fully idempotent (this migration can be applied twice: from the extension and via the copy in the app's priv/repo/migrations).
   def up do
-    alter table(@join_table) do
-      add_pointer_if_not_exists(:user_id, :weak)
-    end
+    alter_add_pointer_if_not_exists(@join_table, :user_id, :weak)
   end
 
   def down do
