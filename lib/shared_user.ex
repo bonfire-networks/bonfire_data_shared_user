@@ -21,7 +21,7 @@ defmodule Bonfire.Data.SharedUser do
     # access is account-level: any user of a linked account may act as the shared user
     many_to_many(:caretaker_accounts, Account, join_through: "bonfire_data_shared_user_accounts")
 
-    # the specific users behind each link (invited co-managers + creator) — the roster's display identities, never the account's other personas. Also stitched onto User in config/bonfire_data.exs.
+    # the specific users behind each link (invited co-managers + creator), the roster's display identities, never the account's other personas. Also stitched onto User in config/bonfire_data.exs.
     many_to_many(:caretaker_users, User,
       join_through: "bonfire_data_shared_user_accounts",
       join_keys: [shared_user_id: :id, user_id: :id]
