@@ -8,10 +8,13 @@ defmodule Bonfire.Data.SharedUser.Repo.Migrations.SharedUserAccountsUniqueIndex 
     # An account should be linked to a given shared user only once. The table originally had only
     # non-unique per-column indexes, so on existing instances there may be duplicate rows; remove
     # them before adding the unique index (creating it over duplicates would otherwise fail).
+    # The table has no primary key, so rows are told apart by the physical row id, which YugabyteDB calls ybctid (it has no ctid).
+    row_id = if System.get_env("DB_ADAPTER") == "yugabyte", do: "ybctid", else: "ctid"
+
     execute("""
     DELETE FROM "#{@join_table}" a
     USING "#{@join_table}" b
-    WHERE a.ctid < b.ctid
+    WHERE a.#{row_id} < b.#{row_id}
       AND a.shared_user_id = b.shared_user_id
       AND a.account_id = b.account_id
     """)
